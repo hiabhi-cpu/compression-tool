@@ -18,21 +18,27 @@ public class App
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+//        System.out.println( "Hello World!" );
         if(args.length!=1) {
         	System.out.println("Give a text file ");
         	return;
         }
-        System.out.println(args[0]);
+//        System.out.println(args[0]);
         Map<Character, Integer> map=getMapping(args[0]);
         
-        ArrayList<HuffTree> listNodes=new ArrayList<HuffTree>();
+        Map<Character, Integer> map1=new HashMap<>();
+        map1.put('A', 12);
+        map1.put('B', 15);
+        map1.put('C', 7);
+        map1.put('D', 13);
+        map1.put('E', 9);
+//        map1.put('F', 45);
+//        map1.put('U', 37);
+//        map1.put('Z', 2);
         
-        for(Character c:map.keySet()) {
-        	listNodes.add(new HuffTree(c, map.get(c)));
-        }
+        List<HuffTree> listNodes=getListNode(map);
         
-        Collections.sort(listNodes);
+        
         
 //        for(HuffTree huff:listNodes) {
 //        	if(huff.root().isLeaf()) {
@@ -46,20 +52,26 @@ public class App
         	return;
         }
         HuffTree root=getTree(listNodes);
+        Map<Character, String> prefix=new HashMap<>();
         
+        printTree(root.root(),"",prefix);
+//        root.root();
     }
     
     
-    public static void printTree(HuffTree root) {
-    	if(root.root().isLeaf()) {
-    		HuffLeafNode leafNode=(HuffLeafNode)root.root();
-    		System.out.println();
+    public static void printTree(HaffBaseNode root,String str,Map<Character, String> map) {
+    	if(root.isLeaf()) {
+    		HuffLeafNode leafNode=(HuffLeafNode)root;
+    		System.out.println(str+leafNode.getVal());
+    		map.put(leafNode.getVal(), str);
     		return;
     	}
-    	HuffInternalNode temp=(HuffInternalNode)root.root();
+    	HuffInternalNode temp=(HuffInternalNode)root;
     	
     	HaffBaseNode left=temp.getLeftNode();
 		HaffBaseNode right=temp.getRightNode();
+		printTree(left,str+"0",map);
+		printTree(right,str+"1",map);
 //		printTree();
     }
     
@@ -76,16 +88,16 @@ public class App
     		list.remove(0);
     		list.add(temp);
     		Collections.sort(list);
-    		for(HuffTree huff:list) {
-            	if(huff.root().isLeaf()) {
-            		HuffLeafNode leafNode=(HuffLeafNode)huff.rootBaseNode;
-            		System.out.println(leafNode.getVal()+" : ");
-            	}else {
-            		System.out.println(huff.root().weight());
-            	}
-            	
-            }
-    		System.out.println("********************************");
+//    		for(HuffTree huff:list) {
+//            	if(huff.root().isLeaf()) {
+//            		HuffLeafNode leafNode=(HuffLeafNode)huff.rootBaseNode;
+//            		System.out.println(leafNode.getVal()+" : ");
+//            	}else {
+//            		System.out.println(huff.root().weight());
+//            	}
+//            	
+//            }
+//    		System.out.println("********************************");
     	}
     	
     	return list.get(0);
@@ -117,5 +129,13 @@ public class App
         return map;
     }
     
-    
+    public static List<HuffTree> getListNode(Map<Character, Integer> map){
+    	ArrayList<HuffTree> listNodes=new ArrayList<HuffTree>();
+    	for(Character c:map.keySet()) {
+        	listNodes.add(new HuffTree(c, map.get(c)));
+        }
+        
+        Collections.sort(listNodes);
+        return listNodes;
+    }
 }
