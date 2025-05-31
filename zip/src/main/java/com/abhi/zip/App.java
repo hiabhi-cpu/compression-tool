@@ -1,7 +1,10 @@
 package com.abhi.zip;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -19,7 +22,7 @@ public class App
     public static void main( String[] args )
     {
 //        System.out.println( "Hello World!" );
-        if(args.length!=1) {
+        if(args.length<1) {
         	System.out.println("Give a text file ");
         	return;
         }
@@ -52,18 +55,52 @@ public class App
         	return;
         }
         HuffTree root=getTree(listNodes);
-        Map<Character, String> prefix=new HashMap<>();
+        Map<Integer, String> prefix=new HashMap<>();
         
         printTree(root.root(),"",prefix);
 //        root.root();
+        for(Integer i:prefix.keySet()) {
+        	System.out.println((char)i.intValue()+" "+i+" "+prefix.get(i));
+        }
+        String fileName;
+        if(!(args.length!=2)) {
+        	fileName=args[1];
+        }else {
+        	fileName="output.txt";
+        }
+        System.out.println(fileName);
+        if(!writeHeader(fileName, prefix)) {
+        	return;
+        }
     }
     
+    public static boolean writeHeader(String fileName,Map<Integer, String> map) {
+    	try {
+			FileWriter fileWriter=new FileWriter(fileName);
+			BufferedWriter writer=new BufferedWriter(fileWriter);
+			
+			 for(Integer i:map.keySet()) {
+				 writer.append(i.toString());
+				 writer.append('#');
+				 writer.append(map.get(i));
+				 writer.newLine();
+//		        	System.out.println((char)i.intValue()+" "+i+" "+map.get(i));
+		        }
+			writer.append("#########################");
+			writer.close();
+			return true;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+    }
     
-    public static void printTree(HaffBaseNode root,String str,Map<Character, String> map) {
+    public static void printTree(HaffBaseNode root,String str,Map<Integer, String> map) {
     	if(root.isLeaf()) {
     		HuffLeafNode leafNode=(HuffLeafNode)root;
-    		System.out.println(str+leafNode.getVal());
-    		map.put(leafNode.getVal(), str);
+//    		System.out.println(leafNode.getVal()+" "+(int)leafNode.getVal()+" "+str);
+    		map.put((int)leafNode.getVal(), str);
     		return;
     	}
     	HuffInternalNode temp=(HuffInternalNode)root;
