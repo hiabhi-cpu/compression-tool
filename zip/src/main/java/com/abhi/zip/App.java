@@ -2,6 +2,7 @@ package com.abhi.zip;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -70,8 +71,35 @@ public class App
         }
         System.out.println(fileName);
         if(!writeHeader(fileName, prefix)) {
+        	System.out.println("Error occured");
         	return;
         }
+        if(!writeToFile(args[0], fileName, prefix)) {
+        	System.out.println("Error occured");
+        	return;
+        }
+    }
+    
+    public static boolean writeToFile(String input,String output,Map<Integer, String>map) {
+    	try {
+    		
+    		BufferedReader reader=new BufferedReader(new FileReader(input));
+//    		BufferedWriter writer=new BufferedWriter();
+    		BitOutputStream bitOutputStream=new BitOutputStream(new FileOutputStream(output,true));
+//    		writer.newLine();
+    		int ch;
+			while((ch=reader.read()) !=-1) {
+				bitOutputStream.writeBite(ch);
+			}
+    		
+    		reader.close();
+//    		writer.close();
+    		return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return false;
+		}
     }
     
     public static boolean writeHeader(String fileName,Map<Integer, String> map) {
@@ -87,6 +115,7 @@ public class App
 //		        	System.out.println((char)i.intValue()+" "+i+" "+map.get(i));
 		        }
 			writer.append("#########################");
+			writer.newLine();
 			writer.close();
 			return true;
 		} catch (IOException e) {
@@ -155,6 +184,7 @@ public class App
 //				System.out.println((char)ch);
 				
 			}
+			reader.close();
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println("Error in the opening the file"+e);
