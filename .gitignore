@@ -3,3 +3,7 @@ zip/output1.txt
 zip/hello.txt
 zip/test.txt
 zip/target/output.txt
+unzip/hello.txt
+unzip/output.txt
+unzip/output1.txt
+zip/zipped.txt

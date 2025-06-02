@@ -30,12 +30,12 @@ public class App
 //        System.out.println(args[0]);
         Map<Character, Integer> map=getMapping(args[0]);
         
-        Map<Character, Integer> map1=new HashMap<>();
-        map1.put('A', 12);
-        map1.put('B', 15);
-        map1.put('C', 7);
-        map1.put('D', 13);
-        map1.put('E', 9);
+//        Map<Character, Integer> map1=new HashMap<>();
+//        map1.put('A', 12);
+//        map1.put('B', 15);
+//        map1.put('C', 7);
+//        map1.put('D', 13);
+//        map1.put('E', 9);
 //        map1.put('F', 45);
 //        map1.put('U', 37);
 //        map1.put('Z', 2);
@@ -67,7 +67,7 @@ public class App
         if(!(args.length!=2)) {
         	fileName=args[1];
         }else {
-        	fileName="output.txt";
+        	fileName="zipped.txt";
         }
         System.out.println(fileName);
         if(!writeHeader(fileName, prefix)) {
@@ -169,7 +169,7 @@ public class App
     	return list.get(0);
     }
     
-    static Map<Character, Integer> getMapping(String filename){
+    public static Map<Character, Integer> getMapping(String filename){
     	HashMap<Character, Integer> map=new HashMap<>();
         try {
 			BufferedReader reader=new BufferedReader(new FileReader(filename));
