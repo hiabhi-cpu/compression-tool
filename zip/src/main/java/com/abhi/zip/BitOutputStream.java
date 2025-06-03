@@ -15,17 +15,21 @@ public class BitOutputStream {
 		currentByte=(currentByte<<1)|(bit&1);
 		numBitFilled++;
 		if(numBitFilled==8) {
-			outputStream.write(currentByte);
+			outputStream.write(currentByte);			
 			numBitFilled=0;
 			currentByte=0;
+			
 		}
 	}
 	
 	public void close() throws Exception{
+
 		if(numBitFilled>0) {
 			currentByte<<=(8-numBitFilled);
-			outputStream.write(currentByte);
+			outputStream.write((int)currentByte);
 		}
 		outputStream.close();
 	}
+	
+	
 }

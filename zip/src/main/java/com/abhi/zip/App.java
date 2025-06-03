@@ -2,6 +2,7 @@ package com.abhi.zip;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -14,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+
 /**
  * Hello world!
  *
@@ -22,35 +25,18 @@ public class App
 {
     public static void main( String[] args )
     {
-//        System.out.println( "Hello World!" );
+
         if(args.length<1) {
         	System.out.println("Give a text file ");
         	return;
         }
-//        System.out.println(args[0]);
+
         Map<Character, Integer> map=getMapping(args[0]);
-        
-//        Map<Character, Integer> map1=new HashMap<>();
-//        map1.put('A', 12);
-//        map1.put('B', 15);
-//        map1.put('C', 7);
-//        map1.put('D', 13);
-//        map1.put('E', 9);
-//        map1.put('F', 45);
-//        map1.put('U', 37);
-//        map1.put('Z', 2);
+
         
         List<HuffTree> listNodes=getListNode(map);
-        
-        
-        
-//        for(HuffTree huff:listNodes) {
-//        	if(huff.root().isLeaf()) {
-//        		HuffLeafNode leafNode=(HuffLeafNode)huff.rootBaseNode;
-//        		System.out.print(leafNode.getVal()+" : "+(int)leafNode.getVal()+" : ");
-//        	}
-//        	System.out.println(huff.root().weight());
-//        }
+
+
         if(listNodes.size()==0) {
         	System.out.println("NOthing in the file");
         	return;
@@ -78,22 +64,28 @@ public class App
         	System.out.println("Error occured");
         	return;
         }
+
     }
+    
+    
     
     public static boolean writeToFile(String input,String output,Map<Integer, String>map) {
     	try {
     		
-    		BufferedReader reader=new BufferedReader(new FileReader(input));
-//    		BufferedWriter writer=new BufferedWriter();
+    		FileInputStream reader=new FileInputStream(input);
     		BitOutputStream bitOutputStream=new BitOutputStream(new FileOutputStream(output,true));
-//    		writer.newLine();
+
     		int ch;
 			while((ch=reader.read()) !=-1) {
-				bitOutputStream.writeBite(ch);
+				String tempString=map.get(ch);
+				for(Character tempch:tempString.toCharArray()) {
+					bitOutputStream.writeBite(new Integer(tempch));
+				}
+
 			}
-    		
+    		bitOutputStream.close();
     		reader.close();
-//    		writer.close();
+
     		return true;
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -112,7 +104,6 @@ public class App
 				 writer.append('#');
 				 writer.append(map.get(i));
 				 writer.newLine();
-//		        	System.out.println((char)i.intValue()+" "+i+" "+map.get(i));
 		        }
 			writer.append("#########################");
 			writer.newLine();
@@ -128,7 +119,6 @@ public class App
     public static void printTree(HaffBaseNode root,String str,Map<Integer, String> map) {
     	if(root.isLeaf()) {
     		HuffLeafNode leafNode=(HuffLeafNode)root;
-//    		System.out.println(leafNode.getVal()+" "+(int)leafNode.getVal()+" "+str);
     		map.put((int)leafNode.getVal(), str);
     		return;
     	}
@@ -138,7 +128,6 @@ public class App
 		HaffBaseNode right=temp.getRightNode();
 		printTree(left,str+"0",map);
 		printTree(right,str+"1",map);
-//		printTree();
     }
     
     public static HuffTree getTree(List<HuffTree> list) {
@@ -149,21 +138,10 @@ public class App
     		HaffBaseNode left=list.get(0).root();
     		HaffBaseNode right=list.get(1).root();
     		HuffTree temp=new HuffTree(left, right, left.weight()+right.weight());
-//    		System.out.println(left.weight()+right.weight());
     		list.remove(0);
     		list.remove(0);
     		list.add(temp);
     		Collections.sort(list);
-//    		for(HuffTree huff:list) {
-//            	if(huff.root().isLeaf()) {
-//            		HuffLeafNode leafNode=(HuffLeafNode)huff.rootBaseNode;
-//            		System.out.println(leafNode.getVal()+" : ");
-//            	}else {
-//            		System.out.println(huff.root().weight());
-//            	}
-//            	
-//            }
-//    		System.out.println("********************************");
     	}
     	
     	return list.get(0);
@@ -176,12 +154,12 @@ public class App
 			int ch;
 			while((ch=reader.read()) !=-1) {
 				if(map.containsKey((char)ch)) {
-//					System.out.println("Repeated");
+
 					map.put((char) ch, map.get((char) ch) + 1);
 				}else {
 					map.put((char)ch, 1);
 				}
-//				System.out.println((char)ch);
+
 				
 			}
 			reader.close();
@@ -189,10 +167,7 @@ public class App
 			// TODO: handle exception
 			System.out.println("Error in the opening the file"+e);
 		}
-//        System.out.println(map);
-//        for(Character m:map.keySet()) {
-//        	System.out.println(m + " : "+ map.get(m));
-//        }
+
         return map;
     }
     
