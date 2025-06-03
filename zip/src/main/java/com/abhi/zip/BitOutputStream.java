@@ -15,7 +15,8 @@ public class BitOutputStream {
 		currentByte=(currentByte<<1)|(bit&1);
 		numBitFilled++;
 		if(numBitFilled==8) {
-			outputStream.write(currentByte);			
+			outputStream.write(currentByte);
+//			System.out.println(currentByte);
 			numBitFilled=0;
 			currentByte=0;
 			
@@ -26,6 +27,7 @@ public class BitOutputStream {
 
 		if(numBitFilled>0) {
 			currentByte<<=(8-numBitFilled);
+//			System.out.println(currentByte);
 			outputStream.write((int)currentByte);
 		}
 		outputStream.close();
@@ -33,3 +35,4 @@ public class BitOutputStream {
 	
 	
 }
+

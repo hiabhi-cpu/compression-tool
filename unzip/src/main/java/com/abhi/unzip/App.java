@@ -1,10 +1,18 @@
 package com.abhi.unzip;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.Writer;
+import java.security.Identity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 
 /**
@@ -21,16 +29,24 @@ public class App
         	return;
         }
 
-        Map<Integer, String> prefix=getMapping(args[0]); //need to change
+        Map<String,Integer> prefix=getMapping(args[0]); //need to change
         if(prefix==null) {
         	System.out.println("Not correctly zipped");
         	return;
         }
         
-        for(Integer i:prefix.keySet()) {
-        	System.out.println((char)i.intValue()+" "+i+" "+prefix.get(i));
+        for(String i:prefix.keySet()) {
+        	System.out.println(i+" "+(char)prefix.get(i).intValue()+" "+prefix.get(i));
         }
         
+        String fileName;
+        if(!(args.length!=2)) {
+        	fileName=args[1];
+        }else {
+        	fileName="unzipped.txt";
+        }
+        
+        writeToFile(prefix, args[0], fileName);
 //        root.root();
 //        for(Integer i:prefix.keySet()) {
 //        	System.out.println((char)i.intValue()+" "+i+" "+prefix.get(i));
@@ -51,8 +67,47 @@ public class App
 //        	return;
 //        }
     }
-    public static Map<Integer, String> getMapping(String filename){
-    	HashMap<Integer, String> map=new HashMap<>();
+    
+    public static void writeToFile(Map<String,Integer> map,String zip,String unzip) {
+		try {
+			FileInputStream reader=new FileInputStream(zip);
+			BitInputStream writer=new BitInputStream(new BufferedWriter(new FileWriter(unzip)));
+			int cnt=0;
+    		int ch=reader.read();
+			while(cnt<24 && ch>0) {
+				boolean temp=false;
+				if(ch=='#') {
+					temp=true;
+					cnt++;
+				}
+//				System.out.println(ch);
+				ch=reader.read();
+				if(temp && ch!='#') {
+					cnt--;
+				}
+//				System.out.println(cnt);
+			}
+			reader.read();
+			reader.read();
+//			reader.read();
+			ch=reader.read();
+			while(ch>=0) {
+//				System.out.println((char)ch+ " : "+ch);
+				writer.writeBite(ch,map);
+				ch=reader.read();
+			}
+			System.out.println(ch);
+			writer.close();
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+    }
+    
+    public static Map<String,Integer> getMapping(String filename){
+    	HashMap<String,Integer> map=new HashMap<>();
         try {
 			BufferedReader reader=new BufferedReader(new FileReader(filename));
 			String line=reader.readLine();
@@ -66,7 +121,7 @@ public class App
 				if(strings.length!=2) {
 					return null;
 				}
-				map.put(new Integer( strings[0]), strings[1]);
+				map.put( strings[1],new Integer( strings[0]));
 				
 				line=reader.readLine();
 			}
@@ -75,10 +130,7 @@ public class App
 			// TODO: handle exception
 			System.out.println("Error in the opening the file"+e);
 		}
-//        System.out.println(map);
-//        for(Character m:map.keySet()) {
-//        	System.out.println(m + " : "+ map.get(m));
-//        }
+
         return map;
     }
     

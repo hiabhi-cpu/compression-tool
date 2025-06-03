@@ -25,7 +25,7 @@ public class App
 {
     public static void main( String[] args )
     {
-
+//        System.out.println( "Hello World!" );
         if(args.length<1) {
         	System.out.println("Give a text file ");
         	return;
@@ -36,7 +36,6 @@ public class App
         
         List<HuffTree> listNodes=getListNode(map);
 
-
         if(listNodes.size()==0) {
         	System.out.println("NOthing in the file");
         	return;
@@ -45,7 +44,7 @@ public class App
         Map<Integer, String> prefix=new HashMap<>();
         
         printTree(root.root(),"",prefix);
-//        root.root();
+
         for(Integer i:prefix.keySet()) {
         	System.out.println((char)i.intValue()+" "+i+" "+prefix.get(i));
         }
@@ -67,25 +66,25 @@ public class App
 
     }
     
-    
+
     
     public static boolean writeToFile(String input,String output,Map<Integer, String>map) {
     	try {
     		
     		FileInputStream reader=new FileInputStream(input);
     		BitOutputStream bitOutputStream=new BitOutputStream(new FileOutputStream(output,true));
-
     		int ch;
 			while((ch=reader.read()) !=-1) {
 				String tempString=map.get(ch);
+				if(tempString==null) {
+					continue;
+				}
 				for(Character tempch:tempString.toCharArray()) {
 					bitOutputStream.writeBite(new Integer(tempch));
 				}
-
 			}
     		bitOutputStream.close();
     		reader.close();
-
     		return true;
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -128,6 +127,7 @@ public class App
 		HaffBaseNode right=temp.getRightNode();
 		printTree(left,str+"0",map);
 		printTree(right,str+"1",map);
+//		printTree();
     }
     
     public static HuffTree getTree(List<HuffTree> list) {
@@ -142,6 +142,7 @@ public class App
     		list.remove(0);
     		list.add(temp);
     		Collections.sort(list);
+
     	}
     	
     	return list.get(0);
@@ -154,12 +155,10 @@ public class App
 			int ch;
 			while((ch=reader.read()) !=-1) {
 				if(map.containsKey((char)ch)) {
-
 					map.put((char) ch, map.get((char) ch) + 1);
 				}else {
 					map.put((char)ch, 1);
 				}
-
 				
 			}
 			reader.close();
