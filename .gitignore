@@ -9,3 +9,5 @@ unzip/output1.txt
 zip/zipped.txt
 unzip/unzipped.txt
 unzip/zipped.txt
+zip/target/
+unzip/target/
