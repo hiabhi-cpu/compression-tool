@@ -60,6 +60,6 @@ output-file-path is optional if not given the zipped file will be generated in t
 
 #### UnZip
 ```bash
-java -jar zip/target/unzip-1.1.jar compress <input-file-path> [<output-file-path>]
+java -jar unzip/target/unzip-1.1.jar compress <input-file-path> [<output-file-path>]
 ```
 output-file-path is optional if not given the unzipped file will be generated in the current directory.
